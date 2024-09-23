@@ -1,36 +1,62 @@
+![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)
+
+
+# Live Chat Playground
+
+A simple live chatting application built for testers to practice and learn web automation testing.
+
+## Don't forget to give a :star: to make the project popular
+
+## Tech Stack 
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repo
+1. Navigate into the root folder
+1. Run `npm install`
+1. Run `npm run dev`
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How to use the application
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+1. Open [http://localhost:3000](http://localhost:3000) with your browser
+    - Enter the following mandatory details on the screen to start chatting: 
+        - Name
+        - Location
+        - Age
+        - Click on the Start Chatting button to start the chat
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Open a new browser on the same machine or Another Tab of same browser and navigate to [http://localhost:3000](http://localhost:3000)
+    - Enter the following mandatory details on the screen to start chatting as a new user: 
+        - Name
+        - Location
+        - Age
+        - Click on the Start Chatting button to start the chat
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+1. To join within same network: Open a browser and enter the IP address of the network with `port:3000`
+    - Enter the following mandatory details on the screen to start chatting as a new user: 
+        - Name
+        - Location
+        - Age
+        - Click on the Start Chatting button to start the chat
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Once the login is successful, on the next screen you should be able to see the live users list with their Name and Age and chat with them.
 
-## Deploy on Vercel
+1. The "Enter Message" textbox could be used to type a message and "Send" button can be used to send the message.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. The "Live Chat" window will show the following details to the user:
+    - User information of joining, leaving the chat
+    - Sent and Received Messages
+    - Logout button to exit the Live Chat
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## :question: Need Assistance?
+
+- Discuss your queries by writing to me @ `mohammadfaisalkhatri@gmail.com`
+  OR ping me on any of the social media sites using the below link:
+    - [Linktree](https://linktr.ee/faisalkhatri)
+

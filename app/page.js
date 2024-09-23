@@ -1,100 +1,262 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
+import styles from "../styles/Chat.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faLinkedin,
+  faGithub,
+  faYoutube,
+} from "@fortawesome/free-brands-svg-icons";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
+  const [age, setAge] = useState("");
+  const [isChatting, setIsChatting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [liveUsers, setLiveUsers] = useState([]);
+  const chatEndRef = useRef(null);
+  const socketRef = useRef(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+  useEffect(() => {
+    if (isChatting) {
+      socketRef.current = new WebSocket("ws://localhost:3001");
+
+      const joinMessage = {
+        name: name,
+        location: location,
+        age: age,
+        type: "join",
+      };
+      socketRef.current.onopen = () => {
+        socketRef.current.send(JSON.stringify(joinMessage));
+      };
+
+      socketRef.current.onmessage = async (event) => {
+        let message;
+        if (typeof event.data === "string") {
+          message = JSON.parse(event.data);
+        } else {
+          const text = await event.data.text();
+          message = JSON.parse(text);
+        }
+
+        if (
+          message.type === "join" ||
+          message.type === "leave" ||
+          message.type === "message"
+        ) {
+          setMessages((prevMessages) => [...prevMessages, message]);
+        }
+
+        if (message.type === "join" || message.type === "leave") {
+          setLiveUsers(message.users);
+        }
+      };
+
+      return () => socketRef.current?.close();
+    }
+  }, [isChatting, location, name, age]);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    if (input.trim()) {
+      const message = {
+        user: name,
+        location: location,
+        text: input,
+        age: age,
+        type: "message",
+      };
+
+      socketRef.current.send(JSON.stringify(message));
+      setInput("");
+    }
+  };
+
+  const handleStartChat = (e) => {
+    e.preventDefault();
+
+    if (!Number.isInteger(Number(age))) {
+      setErrorMessage("Age cannot be a decimal value");
+      return;
+    }
+
+    if (age < 18 || age > 99) {
+      setErrorMessage("Age should be between 18 and 99");
+      return;
+    }
+
+    const locationOnlyNumbers = /^[0-9]+$/.test(location);
+    if (locationOnlyNumbers) {
+      setErrorMessage("Location cannot contain only numbers");
+      return;
+    }
+
+    if (name.trim() && location.trim() && age.trim()) {
+      setErrorMessage("");
+      setIsChatting(true);
+    }
+  };
+
+  const handleExitChat = () => {
+    socketRef.current.close();
+    setIsChatting(false);
+    setMessages([]);
+  };
+
+  return (
+    <div className={styles.container}>
+      <nav className={styles.navbar}>
+        <h1 className={styles.navTitle}>Live Chat</h1>
+      </nav>
+
+      {!isChatting ? (
+        <form
+          id="start-chat"
+          onSubmit={handleStartChat}
+          className={styles.inputContainer}
+        >
+          <h1 className={styles.title}>Welcome to Live Chat</h1>
+          {errorMessage && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
+          <input
+            type="text"
+            id="name"
+            name="name-field"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className={styles.input}
+            placeholder="Enter your name"
+            required
+          />
+          <input
+            type="text"
+            id="location"
+            name="location-field"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className={styles.input}
+            placeholder="Enter your location"
+            required
+          />
+          <input
+            type="text"
+            id="age"
+            name="age-field"
+            value={age}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (Number.isInteger(Number(value))) {
+                setAge(value);
+              }
+            }}
+            className={styles.input}
+            placeholder="Enter your age"
+            required
+          />
+          <button type="submit" className={styles.sendButton} id="start-chat">
+            Start Chatting
+          </button>
+        </form>
+      ) : (
+        <div className={styles.chatBoxContainer}>
+          <div className={styles.chatBox}>
+            <div className={styles.messages}>
+              {messages.map((msg, index) => (
+                <div
+                  key={index}
+                  id={`message-${index}`}
+                  className={
+                    msg.user === name ? styles.bubbleRight : styles.bubbleLeft
+                  }
+                >
+                  <strong>
+                    {msg.user} {msg.location && `(${msg.location})`}:
+                  </strong>{" "}
+                  {msg.text}
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+            <form
+              id="chat-container-form"
+              onSubmit={sendMessage}
+              className={styles.chatBoxContainer}
+            >
+              <input
+                type="text"
+                id="message"
+                name="send-message"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className={styles.input}
+                placeholder="Type your message here..."
+                required
+              />
+              <button
+                type="submit"
+                className={styles.sendButton}
+                id="send-message"
+              >
+                Send
+              </button>
+            </form>
+            <button
+              onClick={handleExitChat}
+              className={styles.exitButton}
+              id="logout"
+            >
+              Logout
+            </button>
+          </div>
+          <div className={styles.liveUsersList}>
+            <h3>Live Users List ({liveUsers.length})</h3>
+            <ul>
+              {liveUsers.map((user, index) => (
+                <li key={index}>
+                  {user.name} {user.age}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      <footer className={styles.footer}>
+        <p>© 2024 Live Chat App is designed and built by Faisal Khatri</p>
+        <div className={styles.socialLinks}>
           <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href="https://www.linkedin.com/in/faisalkhatri"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+            <FontAwesomeIcon icon={faLinkedin} size="2x" />
           </a>
           <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href="https://github.com/mfaisalkhatri/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Read our docs
+            <FontAwesomeIcon icon={faGithub} size="2x" />
+          </a>
+          <a
+            href="https://www.youtube.com/@faisalkhatriqa"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FontAwesomeIcon icon={faYoutube} size="2x" />
           </a>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
       </footer>
     </div>
   );
