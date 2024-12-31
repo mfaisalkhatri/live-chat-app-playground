@@ -60,12 +60,18 @@ public async verifyPageHeader(expectedHeader: string) {
 
 public async verifyPageFooter(expectedFooterText:string) {
     expect(await this.footerText).toBe(expectedFooterText);
+
+}
+
+public async verifyPageFooterIcons() {
     expect(await this.linkedInIcon).toBeDisplayed();
     expect(await this.githubIcon).toBeDisplayed();
     expect(await this.youtubeIcon).toBeDisplayed();
+}
+public open () {
+   return super.open('http://localhost:3000');
+}
 
 }
-}
-
 
 export default LoginPage;
