@@ -12,11 +12,11 @@ describe("Login Page Tests of 'My Live Chat Playground' ", () => {
   });
 
   it("should verify the login page title ", async () => {
-    await loginPage.verifyPageTitle("Live Chat");
+    await loginPage.verifyPageTitle("Live Chat Playground");
   });
 
   it('should verify the login page header', async() => {
-    await loginPage.verifyPageHeader("Welcome to Live Chat");
+    await loginPage.verifyPageHeader("Welcome to Live Chat Play");
   });
 
   it('should verify that all the required fields are available in login page', async() => {
