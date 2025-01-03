@@ -29,27 +29,36 @@ class ChattingPage extends Page {
     return $("ul li").getText();
   }
 
-  public async verifyPageComponents() {
-    expect(await this.userJoinedMessage).toBeDisplayed();
+  public async verifyChatMessageBoxIsAccessible() {
     expect(await this.chatMessageBox).toBeDisplayed();
     expect(await this.chatMessageBox).toBeEnabled();
     expect(await this.chatMessageBox).toBeClickable();
+  }
+
+  public async verifySendButtonIsAccessible() {
     expect(await this.sendButton).toBeDisplayed();
     expect(await this.sendButton).toBeEnabled();
     expect(await this.sendButton).toBeClickable();
+  }
+
+  public async verifyLogoutButtonIsAccessible() {
     expect(await this.logoutButton).toBeDisplayed();
     expect(await this.logoutButton).toBeEnabled();
     expect(await this.logoutButton).toBeClickable();
   }
 
-  public async verifyLiveUserList(userinfo:string) {
+  public async verifyLiveUserList() {
     expect(await this.liveUserList).toBeDisplayed();
-    expect(await this.liveUserList).toBe('Live Users List (1)');
+    expect(await this.liveUserList).toBe("Live Users List (1)");
+  }
+
+  public async verifyLiveUserDetails(userinfo: string) {
     expect(await this.liveUsers).toBeDisplayed();
-    expect (await this.liveUsers).toBe(userinfo);
+    expect(await this.liveUsers).toBe(userinfo);
   }
 
   public async verifyUserJoinedMessage(message: string) {
+    expect(await this.userJoinedMessage).toBeDisplayed();
     expect(await this.userJoinedMessage).toBe(message);
   }
 
