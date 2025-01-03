@@ -84,12 +84,7 @@ export default function Home() {
 
   const handleStartChat = (e) => {
     e.preventDefault();
-
-    if (!Number.isInteger(Number(age))) {
-      setErrorMessage("Age cannot be a decimal value");
-      return;
-    }
-
+    
     if (age < 18 || age > 99) {
       setErrorMessage("Age should be between 18 and 99");
       return;
@@ -156,7 +151,7 @@ export default function Home() {
             value={age}
             onChange={(e) => {
               const value = e.target.value;
-              if (Number.isInteger(Number(value))) {
+              if (/^\d*$/.test(value)) {
                 setAge(value);
               }
             }}
@@ -233,7 +228,7 @@ export default function Home() {
       )}
 
       <footer className={styles.footer}>
-        <p>© 2024 Live Chat App is designed and built by Faisal Khatri</p>
+        <p>© 2025 Live Chat App is designed and built by Faisal Khatri</p>
         <div className={styles.socialLinks}>
           <a
             href="https://www.linkedin.com/in/faisalkhatri"

@@ -1,15 +1,42 @@
-import { browser } from '@wdio/globals'
-
-/**
-* main page object containing all methods, selectors and functionality
-* that is shared across all page objects
-*/
 export default class Page {
-    /**
-    * Opens a sub page of the page
-    * @param path path of the sub page (e.g. /path/to/page.html)
-    */
-    public open (path: string) {
-        return browser.url(`https://the-internet.herokuapp.com/${path}`)
-    }
+
+  private get pageTitle() {
+    return $("h1").getText();
+  }
+
+  private get footerText() {
+    return $("footer p").getText();
+  }
+
+  private get linkedInIcon() {
+    return $('footer svg[data-icon="linkedin"]');
+  }
+
+  private get githubIcon() {
+    return $('footer svg[data-icon="github"]');
+  }
+
+  private get youtubeIcon() {
+    return $('footer svg[data-icon="youtube"]');
+  }
+
+  open(path: string) {
+    return browser.url(path);
+  }
+
+  public async verifyPageTitle(expectedTitle: string) {
+    expect(await this.pageTitle).toBe(expectedTitle);
+  }
+
+  public async verifyPageFooter(expectedFooterText: string) {
+    expect(await this.footerText).toBe(expectedFooterText);
+  }
+
+  public async verifyPageFooterIcons() {
+    expect(await this.linkedInIcon).toBeDisplayed();
+    expect(await this.githubIcon).toBeDisplayed();
+    expect(await this.youtubeIcon).toBeDisplayed();
+  }
+
+
 }

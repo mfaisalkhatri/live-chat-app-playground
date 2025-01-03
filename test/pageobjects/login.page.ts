@@ -1,41 +1,61 @@
-import { $ } from '@wdio/globals'
-import Page from './page';
+import Page from "./page";
 
-/**
- * sub page containing specific selectors and methods for a specific page
- */
 class LoginPage extends Page {
-    /**
-     * define selectors using getter methods
-     */
-    public get inputUsername () {
-        return $('#username');
-    }
 
-    public get inputPassword () {
-        return $('#password');
-    }
+  private get pageHeader() {
+    return $("form h1").getText();
+  }
 
-    public get btnSubmit () {
-        return $('button[type="submit"]');
-    }
+  private get errorMessage() {
+    return $("#start-chat p").getText();
+  }
 
-    /**
-     * a method to encapsule automation code to interact with the page
-     * e.g. to login using username and password
-     */
-    public async login (username: string, password: string) {
-        await this.inputUsername.setValue(username);
-        await this.inputPassword.setValue(password);
-        await this.btnSubmit.click();
-    }
+  private get inputName() {
+    return $("#name");
+  }
 
-    /**
-     * overwrite specific options to adapt it to page object
-     */
-    public open () {
-        return super.open('login');
-    }
+  private get inputLocation() {
+    return $("#location");
+  }
+
+  private get inputAge() {
+    return $("#age");
+  }
+
+  private get startChattingButton() {
+    return $("button#start-chat");
+  }
+
+  public async verifyPageFields() {
+    expect(await this.inputName).toBeDisplayed();
+    expect(await this.inputName).toBeEnabled;
+    expect(await this.inputLocation).toBeDisplayed();
+    expect(await this.inputLocation).toBeEnabled;
+    expect(await this.inputAge).toBeDisplayed();
+    expect(await this.inputAge).toBeEnabled;
+    expect(await this.startChattingButton).toBeDisplayed();
+    expect(await this.startChattingButton).toBeEnabled;
+    expect(await this.startChattingButton).toBeClickable;
+  }
+
+  public async verifyPageHeader(expectedHeader: string) {
+    expect(await this.pageHeader).toBe(expectedHeader);
+  }
+
+  public async startChat(name: string, location: string, age: number) {
+    await this.inputName.setValue(name);
+    await this.inputLocation.setValue(location);
+    await this.inputAge.setValue(age);
+    await this.startChattingButton.click();
+  }
+
+  public open() {
+    return super.open("http://localhost:3000");
+  }
+
+  public async verifyErrorMessage(errorMessage: string) {
+    expect(await this.errorMessage).toBe(errorMessage);
+  }
 }
 
-export default new LoginPage();
+export default LoginPage;
