@@ -9,12 +9,14 @@ import {
   faGithub,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
+import Image from "next/image"; 
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
+  const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [isChatting, setIsChatting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -30,6 +32,7 @@ export default function Home() {
         name: name,
         location: location,
         age: age,
+        gender: gender,
         type: "join",
       };
       socketRef.current.onopen = () => {
@@ -60,7 +63,7 @@ export default function Home() {
 
       return () => socketRef.current?.close();
     }
-  }, [isChatting, location, name, age]);
+  }, [isChatting, location, name, age, gender]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -74,6 +77,7 @@ export default function Home() {
         location: location,
         text: input,
         age: age,
+        gender: gender,
         type: "message",
       };
 
@@ -84,11 +88,6 @@ export default function Home() {
 
   const handleStartChat = (e) => {
     e.preventDefault();
-
-    if (!Number.isInteger(Number(age))) {
-      setErrorMessage("Age cannot be a decimal value");
-      return;
-    }
 
     if (age < 18 || age > 99) {
       setErrorMessage("Age should be between 18 and 99");
@@ -116,7 +115,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <nav className={styles.navbar}>
-        <h1 className={styles.navTitle}>Live Chat</h1>
+        <h1 className={styles.navTitle}>Live Chat Playground</h1>
       </nav>
 
       {!isChatting ? (
@@ -125,7 +124,7 @@ export default function Home() {
           onSubmit={handleStartChat}
           className={styles.inputContainer}
         >
-          <h1 className={styles.title}>Welcome to Live Chat</h1>
+          <h1 className={styles.title}>Welcome to Live Chat Playground</h1>
           {errorMessage && (
             <p className={styles.errorMessage}>{errorMessage}</p>
           )}
@@ -156,7 +155,7 @@ export default function Home() {
             value={age}
             onChange={(e) => {
               const value = e.target.value;
-              if (Number.isInteger(Number(value))) {
+              if (/^\d*$/.test(value)) {
                 setAge(value);
               }
             }}
@@ -164,6 +163,51 @@ export default function Home() {
             placeholder="Enter your age"
             required
           />
+          <select
+            id="chat-room"
+            name="chatroom"
+            className={styles.select}
+            required
+          >
+            <option value="">-- Select Chat Room --</option>
+            <option value="General">General</option>
+            <option value="Meme Bank">Meme Bank</option>
+            <option value="Friends">Friends</option>
+          </select>
+          <fieldset className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                id="male"
+                name="gender"
+                value="M"
+                onChange={(e) => setGender(e.target.value)}
+                required
+              />{" "}
+              Male
+            </label>
+            <label>
+              <input
+                type="radio"
+                id="female"
+                name="gender"
+                value="F"
+                onChange={(e) => setGender(e.target.value)}
+                required
+              />{" "}
+              Female
+            </label>
+          </fieldset>
+          <div className={styles.checkbox}>
+            <input
+              type="checkbox"
+              id="terms"
+              name="terms"
+              required
+              aria-describedby="terms-description"
+            />
+            I agree to the Terms and Conditions
+          </div>
           <button type="submit" className={styles.sendButton} id="start-chat">
             Start Chatting
           </button>
@@ -222,18 +266,19 @@ export default function Home() {
           <div className={styles.liveUsersList}>
             <h3>Live Users List ({liveUsers.length})</h3>
             <ul>
-              {liveUsers.map((user, index) => (
-                <li key={index}>
-                  {user.name} {user.age}
-                </li>
-              ))}
+              {liveUsers.map((user, index) => {
+                return (
+                  <li key={index}>
+                    <strong>{user.name}</strong> {user.age} {user.gender}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
       )}
-
       <footer className={styles.footer}>
-        <p>© 2024 Live Chat App is designed and built by Faisal Khatri</p>
+        <p>© 2025 Live Chat App is designed and built by Faisal Khatri</p>
         <div className={styles.socialLinks}>
           <a
             href="https://www.linkedin.com/in/faisalkhatri"

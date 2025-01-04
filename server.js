@@ -93,23 +93,23 @@ wss.on("connection", (ws) => {
  * @param {Object} data - The received data.
  */
 function handleJoin(ws, data) {
-  const { name, location, age } = data;
+  const { name, location, age, gender } = data;
 
-  if (!name || !location || !age) {
+  if (!name || !location || !age || !gender) {
     ws.send(
       JSON.stringify({
         type: "error",
-        message: "Username, location and age are required to join.",
+        message: "Username, location, age and gender are required to join.",
       })
     );
     return;
   }
 
   ws.username = name;
-  const newUser = { name, location, age };
+  const newUser = { name, location, age,gender };
   liveUsers.push(newUser);
 
-  console.log(`${name} (${age}) has joined from ${location}.`);
+  console.log(`${name} (${age}) (${gender}) has joined from ${location}.`);
 
   // Broadcast the join event to all clients
   broadcast({
@@ -117,8 +117,9 @@ function handleJoin(ws, data) {
     user: name,
     location: location,
     age: age,
+    gender:gender,
     users: Array.from(liveUsers),
-    text: `${name} ${age} has joined the chat.`,
+    text: `${name} ${age} ${gender} has joined the chat.`,
   });
 }
 
