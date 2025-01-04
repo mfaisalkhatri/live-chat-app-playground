@@ -1,5 +1,4 @@
 export default class Page {
-
   private get pageTitle() {
     return $("h1").getText();
   }
@@ -37,6 +36,4 @@ export default class Page {
     expect(await this.githubIcon).toBeDisplayed();
     expect(await this.youtubeIcon).toBeDisplayed();
   }
-
-
 }
