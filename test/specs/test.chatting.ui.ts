@@ -1,24 +1,23 @@
 import ChattingPage from "../pageobjects/chatting.page";
 import LoginPage from "../pageobjects/login.page";
 
-describe("Chatting Page UI Tests - 'My Live Chat Playground' ", () => {
+describe("Chatting Page UI Tests - 'Live Chat Playground' ", () => {
   let loginPage: LoginPage;
   let chattingPage: ChattingPage;
   let name: string = "Faisal";
   let location: string = "Mumbai";
   let age: number = 30;
-  let chatRoom:string = "Meme Bank";
+  let chatRoom: string = "Meme Bank";
   let gender = "male";
   let userinfo = `${name} ${age}`;
-  let genderValue:string;
+  let genderValue: string;
 
   before(async () => {
-    genderValue = gender==="male"?"M":"F";
-    chattingPage = new ChattingPage();
-    loginPage = new LoginPage();
+    genderValue = gender === "male" ? "M" : "F";
+    loginPage = new LoginPage(browser.chrome);
+    chattingPage = new ChattingPage(browser.chrome);
     await loginPage.open();
-    await loginPage.startChat(name, location, age,chatRoom,gender);
-
+    await loginPage.startChat(name, location, age, chatRoom, gender);
   });
 
   it("should verify the chatting page title", async () => {
@@ -61,7 +60,7 @@ describe("Chatting Page UI Tests - 'My Live Chat Playground' ", () => {
   });
 
   it("should verify sending a new message from chatting page", async () => {
-    let userinfo = `${name} (${location}): `
+    let userinfo = `${name} (${location}): `;
     let message: string = "Good Morning, How are you doing?";
     await chattingPage.sendMessage(message);
     await chattingPage.verifyNewMessage(userinfo + message);

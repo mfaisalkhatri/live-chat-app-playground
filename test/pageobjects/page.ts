@@ -1,26 +1,34 @@
+import {Browser} from 'webdriverio';
+
 export default class Page {
+
+  browser: Browser;
+  
+  constructor(browser:Browser) {
+    this.browser = browser;
+  }
   private get pageTitle() {
-    return $("h1").getText();
+    return this.browser.$("h1").getText();
   }
 
   private get footerText() {
-    return $("footer p").getText();
+    return this.browser.$("footer p").getText();
   }
 
   private get linkedInIcon() {
-    return $('footer svg[data-icon="linkedin"]');
+    return this.browser.$('footer svg[data-icon="linkedin"]');
   }
 
   private get githubIcon() {
-    return $('footer svg[data-icon="github"]');
+    return this.browser.$('footer svg[data-icon="github"]');
   }
 
   private get youtubeIcon() {
-    return $('footer svg[data-icon="youtube"]');
+    return this.browser.$('footer svg[data-icon="youtube"]');
   }
 
   open(path: string) {
-    return browser.url(path);
+    return this.browser.url(path);
   }
 
   public async verifyPageTitle(expectedTitle: string) {
