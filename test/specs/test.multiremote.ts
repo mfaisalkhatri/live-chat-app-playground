@@ -13,7 +13,7 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
     location: "California",
     age: 24,
     chatRoom: "Meme Bank",
-    gender: "female",
+    gender: "female"
   };
 
   let userTwoDetails = {
@@ -21,8 +21,24 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
     location: "India",
     age: 26,
     chatRoom: "Meme Bank",
-    gender: "male",
+    gender: "male"
   };
+
+  let userOneChat = {
+    messageOne: "Hello, How are you?",
+    messageTwo: "Where are you from?",
+    messageThree: "I am from California!",
+    messageFour:"Cool!"
+  };
+
+  let userTwoChat = {
+    messageOne: "Good, Thank you!",
+    messageTwo: "I am from India, and you?",
+    messageThree: "How is the weather there?",
+    messageFour: "Oh! wow!"
+  };
+
+
 
   before(async () => {
     userOneLoginPage = new LoginPage(browser.chrome);
@@ -49,7 +65,21 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
       userTwoDetails.chatRoom,
       userTwoDetails.gender
     );
-    
+    await userOneChattingPage.sendMessage(userOneChat.messageOne);
+    await userTwoChattingPage.sendMessage(userTwoChat.messageOne);
+
+    await userOneChattingPage.sendMessage(userOneChat.messageTwo);
+    await userTwoChattingPage.sendMessage(userTwoChat.messageTwo);
+
+    await userOneChattingPage.sendMessage(userOneChat.messageThree);
+    await userTwoChattingPage.sendMessage(userTwoChat.messageThree);
+
+    await userOneChattingPage.sendMessage(userOneChat.messageFour);
+    await userTwoChattingPage.sendMessage(userTwoChat.messageFour);
+
+    await userOneChattingPage.browser.pause(5000);
+    await userTwoChattingPage.browser.pause(5000);
+
     await userOneChattingPage.logout();
     await userTwoChattingPage.logout();
   });
