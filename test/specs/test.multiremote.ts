@@ -38,8 +38,6 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
     messageFour: "Oh! wow!"
   };
 
-
-
   before(async () => {
     userOneLoginPage = new LoginPage(browser.chrome);
     userOneChattingPage = new ChattingPage(browser.chrome);
@@ -76,9 +74,6 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
 
     await userOneChattingPage.sendMessage(userOneChat.messageFour);
     await userTwoChattingPage.sendMessage(userTwoChat.messageFour);
-
-    await userOneChattingPage.browser.pause(5000);
-    await userTwoChattingPage.browser.pause(5000);
 
     await userOneChattingPage.logout();
     await userTwoChattingPage.logout();
