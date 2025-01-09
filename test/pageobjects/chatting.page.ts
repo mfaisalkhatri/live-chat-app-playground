@@ -2,10 +2,9 @@ import Page from "./page";
 import { Browser } from "webdriverio";
 
 class ChattingPage extends Page {
-
-    constructor(browser:Browser) {
-      super(browser);
-    }
+  constructor(browser: Browser) {
+    super(browser);
+  }
   private get userJoinedMessage() {
     return this.browser.$("#message-0").getText();
   }
@@ -74,6 +73,10 @@ class ChattingPage extends Page {
 
   public async verifyNewMessage(message: string) {
     expect(await this.messageOne).toBe(message);
+  }
+
+  public async messages(msgNumber: number):Promise<string> {
+    return await this.browser.$(`#message-${msgNumber}`).getText();
   }
 
   public async logout() {

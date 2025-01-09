@@ -7,6 +7,25 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
 
   let userTwoLoginPage: LoginPage;
   let userTwoChattingPage: ChattingPage;
+ 
+  function sleep(ms:number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  let chats = {
+    userOne: [
+      "Hello, How are you?",
+      "Where are you from?",
+      "I am from California!",
+      "Cool!"
+    ],
+    userTwo: [
+      "Good, Thank you!",
+      "I am from India, and you?",
+      "How is the weather there?",
+      "Oh! wow!"
+    ]
+  };
 
   let userOneDetails = {
     name: "Jane",
@@ -14,7 +33,7 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
     age: 24,
     chatRoom: "Meme Bank",
     gender: "female",
-    genderValue: "F"
+    genderValue: "F",
   };
 
   let userTwoDetails = {
@@ -23,22 +42,7 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
     age: 26,
     chatRoom: "Meme Bank",
     gender: "male",
-    genderValue: "M"
-  };
-  
-
-  let userOneChat = {
-    messageOne: "Hello, How are you?",
-    messageTwo: "Where are you from?",
-    messageThree: "I am from California!",
-    messageFour:"Cool!"
-  };
-
-  let userTwoChat = {
-    messageOne: "Good, Thank you!",
-    messageTwo: "I am from India, and you?",
-    messageThree: "How is the weather there?",
-    messageFour: "Oh! wow!"
+    genderValue: "M",
   };
 
   before(async () => {
@@ -73,24 +77,15 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
     let userTwoJoinedMessage: string = `${userOneDetails.name} (${userOneDetails.location}): ${userOneDetails.name} ${userOneDetails.age} ${userOneDetails.genderValue} has joined the chat.`;
     await userOneChattingPage.verifyUserJoinedMessage(userTwoJoinedMessage);
 
-    await userOneChattingPage.sendMessage(userOneChat.messageOne);
-    await userTwoChattingPage.sendMessage(userTwoChat.messageOne);
+    
+    for (let i:number =0; i<chats.userOne.length; i++) {
+      await userOneChattingPage.sendMessage(chats.userOne[i]);
+      await userTwoChattingPage.sendMessage(chats.userTwo[i]);
 
-    //add assertion here
-
-    await userOneChattingPage.sendMessage(userOneChat.messageTwo);
-    await userTwoChattingPage.sendMessage(userTwoChat.messageTwo);
-
-    //add assertion here
-
-    await userOneChattingPage.sendMessage(userOneChat.messageThree);
-    await userTwoChattingPage.sendMessage(userTwoChat.messageThree);
-
-    //add assertion here
-
-    await userOneChattingPage.sendMessage(userOneChat.messageFour);
-    await userTwoChattingPage.sendMessage(userTwoChat.messageFour);
-
+      console.log("Message is: " +await userOneChattingPage.messages(i+2));
+      //await expect(userOneChattingPage.messages(i+1)).toBe(chats.userOne[i]);
+      //await expect(userTwoChattingPage.messages(i+1)).toBe(chats.userTwo[i]);
+    }
     //add assertion here
 
     await userOneChattingPage.logout();
