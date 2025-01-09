@@ -13,7 +13,8 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
     location: "California",
     age: 24,
     chatRoom: "Meme Bank",
-    gender: "female"
+    gender: "female",
+    genderValue: "F"
   };
 
   let userTwoDetails = {
@@ -21,8 +22,10 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
     location: "India",
     age: 26,
     chatRoom: "Meme Bank",
-    gender: "male"
+    gender: "male",
+    genderValue: "M"
   };
+  
 
   let userOneChat = {
     messageOne: "Hello, How are you?",
@@ -63,19 +66,36 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
       userTwoDetails.chatRoom,
       userTwoDetails.gender
     );
+
+    let userOneJoinedMessage: string = `${userTwoDetails.name} (${userTwoDetails.location}): ${userTwoDetails.name} ${userTwoDetails.age} ${userTwoDetails.genderValue} has joined the chat.`;
+    await userTwoChattingPage.verifyUserJoinedMessage(userOneJoinedMessage);
+
+    let userTwoJoinedMessage: string = `${userOneDetails.name} (${userOneDetails.location}): ${userOneDetails.name} ${userOneDetails.age} ${userOneDetails.genderValue} has joined the chat.`;
+    await userOneChattingPage.verifyUserJoinedMessage(userTwoJoinedMessage);
+
     await userOneChattingPage.sendMessage(userOneChat.messageOne);
     await userTwoChattingPage.sendMessage(userTwoChat.messageOne);
+
+    //add assertion here
 
     await userOneChattingPage.sendMessage(userOneChat.messageTwo);
     await userTwoChattingPage.sendMessage(userTwoChat.messageTwo);
 
+    //add assertion here
+
     await userOneChattingPage.sendMessage(userOneChat.messageThree);
     await userTwoChattingPage.sendMessage(userTwoChat.messageThree);
+
+    //add assertion here
 
     await userOneChattingPage.sendMessage(userOneChat.messageFour);
     await userTwoChattingPage.sendMessage(userTwoChat.messageFour);
 
+    //add assertion here
+
     await userOneChattingPage.logout();
     await userTwoChattingPage.logout();
+
+    //add assertion here
   });
 });
