@@ -79,6 +79,10 @@ class ChattingPage extends Page {
     return await this.browser.$(`#message-${msgNumber}`).getText();
   }
 
+  public async verifyMessages(msgNumber: number, message:string) {
+     expect(await this.browser.$(`#message-${msgNumber}`).getText()).toBe(message);
+  }
+
   public async logout() {
     await this.logoutButton.click();
   }
