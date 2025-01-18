@@ -75,12 +75,14 @@ class ChattingPage extends Page {
     expect(await this.messageOne).toBe(message);
   }
 
-  public async messages(msgNumber: number):Promise<string> {
-    return await this.browser.$(`#message-${msgNumber}`).getText();
-  }
+  // public async messages(msgNumber: number):Promise<string> {
+  //   return await this.browser.$(`#message-${msgNumber}`).getText();
+  // }
 
   public async verifyMessages(msgNumber: number, message:string) {
-     expect(await this.browser.$(`#message-${msgNumber}`).getText()).toBe(message);
+    console.log("message is: " +await this.browser.$(`#message-${msgNumber}`).getText()); 
+    expect(await this.browser.$(`#message-${msgNumber}`).getText()).toBe(message);
+     
   }
 
   public async logout() {

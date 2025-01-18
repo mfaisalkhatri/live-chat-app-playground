@@ -55,6 +55,17 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
     );
   };
 
+  const verifyMessages = async (
+    chattingPage: ChattingPage,
+    startIndex: number,
+    userPrefix: string ,
+    messages: string[]
+  ) => {
+    for (let i = 0; i < messages.length; i++) {
+      await chattingPage.verifyMessages(startIndex + i * 2, userPrefix+messages[i]);
+    }
+  };
+
   before(async () => {
     userOneLoginPage = new LoginPage(browser.chrome);
     userOneChattingPage = new ChattingPage(browser.chrome);
@@ -62,6 +73,8 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
     userTwoLoginPage = new LoginPage(browser.firefox);
     userTwoChattingPage = new ChattingPage(browser.firefox);
   });
+
+  
 
   it("should test two user chatting simultaneously from user one window", async () => {
     
@@ -81,15 +94,35 @@ describe("Multi User Chat test - Live Chat Playground", async () => {
       await userTwoChattingPage.sendMessage(chats.userTwo[i]);
     }
 
-    await expect(userOneChattingPage.verifyMessages(3, chats.userTwo[0]));
-    await expect(userOneChattingPage.verifyMessages(5, chats.userTwo[1]));
-    await expect(userOneChattingPage.verifyMessages(7, chats.userTwo[2]));
-    await expect(userOneChattingPage.verifyMessages(9, chats.userTwo[3]));
+    let userOnePrefix: string = `${userOneDetails.name} (${userOneDetails.location}): `
+    let userTwoPrefix: string = `${userTwoDetails.name} (${userTwoDetails.location}): `
 
-    await expect(userOneChattingPage.verifyMessages(2, chats.userOne[0]));
-    await expect(userOneChattingPage.verifyMessages(4, chats.userOne[1]));
-    await expect(userOneChattingPage.verifyMessages(6, chats.userOne[2]));
-    await expect(userOneChattingPage.verifyMessages(8, chats.userOne[3]));
+    await verifyMessages(userOneChattingPage, 2, userOnePrefix, chats.userOne);
+    await verifyMessages(userOneChattingPage, 3, userTwoPrefix, chats.userTwo);
+
+    await userOneChattingPage.logout();
+    await userTwoChattingPage.logout();
+  });
+
+  it("should test two user chatting simultaneously from user two window", async () => {
+    
+    await initializeChat(userOneLoginPage, userOneDetails);
+    await initializeChat(userTwoLoginPage, userTwoDetails);
+    
+    let userTwoJoinedMessage: string = `${userOneDetails.name} (${userOneDetails.location}): ${userOneDetails.name} ${userOneDetails.age} ${userOneDetails.genderValue} has joined the chat.`;
+    await userOneChattingPage.verifyUserJoinedMessage(userTwoJoinedMessage);
+
+
+    for (let i: number = 0; i < chats.userOne.length; i++) {
+      await userOneChattingPage.sendMessage(chats.userOne[i]);
+      await userTwoChattingPage.sendMessage(chats.userTwo[i]);
+    }
+
+    let userOnePrefix: string = `${userOneDetails.name} (${userOneDetails.location}): `
+    let userTwoPrefix: string = `${userTwoDetails.name} (${userTwoDetails.location}): `
+
+    await verifyMessages(userTwoChattingPage, 1, userOnePrefix, chats.userOne);
+    await verifyMessages(userTwoChattingPage, 2, userTwoPrefix, chats.userTwo);
 
     await userOneChattingPage.logout();
     await userTwoChattingPage.logout();
