@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "wdio": "wdio run ./wdio.conf.ts"
+    "test:unit": "wdio config/wdio.chrome.conf.ts",
+    "test:e2e": "wdio config/wdio.multiremote.conf.ts"
   },
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^6.6.0",

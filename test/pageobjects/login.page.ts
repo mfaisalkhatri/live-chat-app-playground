@@ -1,44 +1,49 @@
 import Page from "./page";
+import { Browser } from "webdriverio";
 
 class LoginPage extends Page {
+    
+    constructor(browser:Browser) {
+      super(browser);
+    }
   private get pageHeader() {
-    return $("form h1").getText();
+    return this.browser.$("form h1").getText();
   }
 
   private get errorMessage() {
-    return $("#start-chat p").getText();
+    return this.browser.$("#start-chat p").getText();
   }
 
   private get inputName() {
-    return $("#name");
+    return this.browser.$("#name");
   }
 
   private get inputLocation() {
-    return $("#location");
+    return this.browser.$("#location");
   }
 
   private get inputAge() {
-    return $("#age");
+    return this.browser.$("#age");
   }
 
   private get selectChatRoom() {
-    return $("#chat-room");
+    return this.browser.$("#chat-room");
   }
 
   private get maleRadioButton() {
-    return $("#male");
+    return this.browser.$("#male");
   }
 
   private get femaleRadioButton() {
-    return $("#female");
+    return this.browser.$("#female");
   }
 
   private get startChattingButton() {
-    return $("button#start-chat");
+    return this.browser.$("button#start-chat");
   }
 
   private get termsCheckBox() {
-    return $("#terms");
+    return this.browser.$("#terms");
   }
 
   public async verifyNameFieldIsAccessible() {

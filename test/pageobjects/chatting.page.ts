@@ -1,32 +1,36 @@
 import Page from "./page";
+import { Browser } from "webdriverio";
 
 class ChattingPage extends Page {
+  constructor(browser: Browser) {
+    super(browser);
+  }
   private get userJoinedMessage() {
-    return $("#message-0").getText();
+    return this.browser.$("#message-0").getText();
   }
 
   private get messageOne() {
-    return $("#message-1").getText();
+    return this.browser.$("#message-1").getText();
   }
 
   private get chatMessageBox() {
-    return $("#message");
+    return this.browser.$("#message");
   }
 
   private get sendButton() {
-    return $("#send-message");
+    return this.browser.$("#send-message");
   }
 
   private get logoutButton() {
-    return $("#logout");
+    return this.browser.$("#logout");
   }
 
   private get liveUserList() {
-    return $("h3").getText();
+    return this.browser.$("h3").getText();
   }
 
   private get liveUsers() {
-    return $("ul li").getText();
+    return this.browser.$("ul li").getText();
   }
 
   public async verifyChatMessageBoxIsAccessible() {
@@ -69,6 +73,16 @@ class ChattingPage extends Page {
 
   public async verifyNewMessage(message: string) {
     expect(await this.messageOne).toBe(message);
+  }
+
+  // public async messages(msgNumber: number):Promise<string> {
+  //   return await this.browser.$(`#message-${msgNumber}`).getText();
+  // }
+
+  public async verifyMessages(msgNumber: number, message:string) {
+    console.log("message is: " +await this.browser.$(`#message-${msgNumber}`).getText()); 
+    expect(await this.browser.$(`#message-${msgNumber}`).getText()).toBe(message);
+     
   }
 
   public async logout() {

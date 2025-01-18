@@ -34,7 +34,7 @@
   },
   "include": [
     "test",
-    "wdio.conf.ts",
+    "config/**/*.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": [

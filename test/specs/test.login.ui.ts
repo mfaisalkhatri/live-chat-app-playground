@@ -1,6 +1,6 @@
 import LoginPage from "../pageobjects/login.page";
 
-describe("Login Page UI Tests - 'My Live Chat Playground' ", () => {
+describe("Login Page UI Tests - 'Live Chat Playground' ", () => {
   let loginPage: LoginPage;
   let name: string = "Faisal";
   let location: string = "Mumbai";
@@ -9,7 +9,7 @@ describe("Login Page UI Tests - 'My Live Chat Playground' ", () => {
   let gender = "male";
 
   before(async () => {
-    loginPage = new LoginPage();
+    loginPage = new LoginPage(browser.chrome);
     await loginPage.open();
   });
 
